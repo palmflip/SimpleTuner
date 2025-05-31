@@ -17,38 +17,46 @@ package, recreate your virtual environment.
 Failing command: /workspace/SimpleTuner/venv/bin/python3.10
 ```
 
-## Быстрое решение
+## Быстрое решение (для root)
 
 ```bash
-# 1. Установите обязательный пакет
+# 1. Установите пакет
+apt install python3.10-venv python3.10-dev
+
+# 2. Удалите поврежденное окружение  
+rm -rf venv
+
+# 3. Быстрая установка
+./setup_a100_root.sh
+```
+
+## Быстрое решение (не root)
+
+```bash
+# 1. Установите пакет
 sudo apt install python3.10-venv python3.10-dev
 
 # 2. Удалите поврежденное окружение
-rm -rf venv
+rm -rf venv  
 
-# 3. Запустите установку заново
+# 3. Запустите установку
 ./setup_a100.sh
 ```
 
-## Альтернативное решение
+## Ручное исправление
 
 ```bash
-# Переустановите все Python пакеты
-sudo apt install --reinstall python3.10 python3.10-venv python3.10-dev python3-pip
-
-# Удалите старое окружение
+# Для root:
+apt install python3.10-venv python3.10-dev
 rm -rf venv
-
-# Создайте новое окружение вручную
 python3.10 -m venv venv
 source venv/bin/activate
 
-# Обновите pip
-pip install --upgrade pip setuptools wheel
-
-# Продолжите установку
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-# ... остальные пакеты
+# Для обычного пользователя:  
+sudo apt install python3.10-venv python3.10-dev
+rm -rf venv
+python3.10 -m venv venv
+source venv/bin/activate
 ```
 
 ## Причина проблемы
@@ -87,4 +95,6 @@ echo "✅ venv работает корректно!"
 
 ---
 
-**Эта проблема решена в обновленных скриптах установки! 🎉** 
+**Эта проблема решена в обновленных скриптах установки! 🎉**
+
+**Используйте `setup_a100_root.sh` если работаете под root!** 

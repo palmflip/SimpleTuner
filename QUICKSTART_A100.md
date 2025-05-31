@@ -7,16 +7,15 @@
 ### 0. Установка (если нужно)
 
 ```bash
-# Автоматическая установка одной командой
+# Для root пользователя (быстро):
+./setup_a100_root.sh
+
+# Для обычного пользователя:
 ./setup_a100.sh
 
 # Если ошибка "ensurepip is not available":
-sudo apt install python3.10-venv python3.10-dev
-rm -rf venv  # удалить если было создано
-./setup_a100.sh  # запустить заново
-
-# Или смотрите подробную инструкцию
-# INSTALL_A100.md
+# Root: apt install python3.10-venv python3.10-dev && rm -rf venv && ./setup_a100_root.sh
+# User: sudo apt install python3.10-venv python3.10-dev && rm -rf venv && ./setup_a100.sh
 ```
 
 ### 1. Подготовьте датасет локально
@@ -42,8 +41,10 @@ dataset/
 git clone <your-repo>
 cd SimpleTuner
 
-# Запустите установку
-./setup_a100.sh
+# Запустите установку (выберите версию)
+./setup_a100_root.sh  # для root
+# или
+./setup_a100.sh       # для обычного пользователя
 
 # Скопируйте папку dataset на сервер
 # scp -r dataset/ user@server:/path/to/SimpleTuner/
@@ -106,8 +107,8 @@ source venv/bin/activate
 
 ## 🚨 Если что-то не работает
 
-1. **"ensurepip is not available"** → `sudo apt install python3.10-venv && rm -rf venv && ./setup_a100.sh`
-2. **Нет пакетов** → Запустите `./setup_a100.sh`
+1. **"ensurepip is not available"** → Root: `apt install python3.10-venv && rm -rf venv && ./setup_a100_root.sh`
+2. **Нет пакетов** → Запустите `./setup_a100_root.sh` (root) или `./setup_a100.sh`
 3. **Out of Memory** → Уменьшите batch_size до 2 в конфиге
 4. **Медленно** → Убедитесь что используете CUDA 8.0 (не 9.0)
 5. **Плохое качество** → Увеличьте количество повторений
@@ -121,6 +122,7 @@ source venv/bin/activate
 - **40GB/80GB варианты**: конфиги подходят для обеих
 - **Автоустановка**: скрипт настройки всё делает сам
 - **python3.10-venv**: частая проблема на Ubuntu, исправлена в скрипте
+- **Root версия**: setup_a100_root.sh без sudo для экономии времени
 
 ## 📖 Подробная документация
 
