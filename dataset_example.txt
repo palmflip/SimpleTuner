@@ -1,0 +1,24 @@
+Пример описания для изображения персонажа (файл 1.txt):
+
+A realistic photograph of a young woman with long brown hair and blue eyes, wearing a casual white t-shirt and jeans. She is standing outdoors with natural lighting, looking directly at the camera with a slight smile. The background shows trees and a clear blue sky. The photo has professional quality with sharp focus and natural colors. The subject appears relaxed and confident, with her hands resting at her sides.
+
+---
+
+Пример описания для изображения персонажа (файл 2.txt):
+
+A portrait photograph of the same young woman, this time wearing a black leather jacket over a grey sweater. Her brown hair is styled in loose waves and she has natural makeup. She is positioned at a three-quarter angle to the camera, looking off to the side with a thoughtful expression. The lighting is soft and comes from the left side, creating gentle shadows. The background is a neutral grey studio backdrop. The image has high contrast and excellent detail.
+
+---
+
+Ключевые элементы хорошего описания:
+
+1. **Физические характеристики**: цвет волос, глаз, рост, телосложение
+2. **Одежда и аксессуары**: детальное описание предметов одежды
+3. **Поза и выражение**: как расположен персонаж, эмоции на лице
+4. **Освещение**: тип и направление света (естественный, студийный, сбоку)
+5. **Фон**: описание заднего плана (улица, студия, природа)
+6. **Качество фото**: четкость, цветопередача, профессиональность
+7. **Угол съемки**: фронтально, три четверти, профиль
+8. **Настроение**: общая атмосфера снимка
+
+Важно: используйте одинаковые ключевые характеристики персонажа во всех описаниях для консистентности обучения. 
