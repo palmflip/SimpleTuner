@@ -4,9 +4,22 @@
 
 ## ⚡ За 5 минут до запуска
 
+### 0. Установка (если нужно)
+
+```bash
+# Автоматическая установка одной командой
+./setup_a100.sh
+
+# Или смотрите подробную инструкцию
+# INSTALL_A100.md
+```
+
 ### 1. Подготовьте датасет локально
 
 ```bash
+# Активируйте окружение
+source venv/bin/activate
+
 # Создайте папку dataset и поместите туда:
 mkdir dataset
 
@@ -23,22 +36,40 @@ dataset/
 ```bash
 git clone <your-repo>
 cd SimpleTuner
+
+# Запустите установку
+./setup_a100.sh
+
 # Скопируйте папку dataset на сервер
+# scp -r dataset/ user@server:/path/to/SimpleTuner/
 ```
 
 ### 3. Убедитесь, что модель на месте
 
-Проверьте путь: `/workspace/models/unet/flux/fluxmania_V.safetensors`
+```bash
+# Автоматическая загрузка Flux модели
+source venv/bin/activate
+huggingface-cli login  # введите ваш HF токен
+
+# Скачайте модель
+huggingface-cli download black-forest-labs/FLUX.1-dev \
+  --local-dir /workspace/models/unet/flux/ \
+  --local-dir-use-symlinks False
+
+# Переименуйте если нужно
+mv /workspace/models/unet/flux/flux1-dev.safetensors /workspace/models/unet/flux/fluxmania_V.safetensors
+```
 
 ### 4. Запустите тренировку
 
-**Для экспериментов (быстро, 20 минут):**
 ```bash
-./train_flux_a100_fast.sh
-```
+# Активируйте окружение
+source venv/bin/activate
 
-**Для продакшна (качественно, 45 минут):**
-```bash
+# Для экспериментов (быстро, 20 минут)
+./train_flux_a100_fast.sh
+
+# Для продакшна (качественно, 45 минут)
 ./train_flux_a100.sh
 ```
 
@@ -56,6 +87,7 @@ cd SimpleTuner
 - **Batch Size 4** - баланс скорости и VRAM
 - **Gradient Accumulation** - имитация больших батчей
 - **bf16 precision** - оптимально для A100
+- **Автоустановка** - всё настраивается автоматически
 
 ## 🎯 Результаты для A100
 
@@ -69,10 +101,11 @@ cd SimpleTuner
 
 ## 🚨 Если что-то не работает
 
-1. **Out of Memory** → Уменьшите batch_size до 2 в конфиге
-2. **Медленно** → Убедитесь что используете CUDA 8.0 (не 9.0)
-3. **Плохое качество** → Увеличьте количество повторений
-4. **Нет совместимости** → Все LoRA работают с ComfyUI/A1111
+1. **Нет пакетов** → Запустите `./setup_a100.sh`
+2. **Out of Memory** → Уменьшите batch_size до 2 в конфиге
+3. **Медленно** → Убедитесь что используете CUDA 8.0 (не 9.0)
+4. **Плохое качество** → Увеличьте количество повторений
+5. **Нет совместимости** → Все LoRA работают с ComfyUI/A1111
 
 ## 💡 Особенности A100
 
@@ -80,10 +113,13 @@ cd SimpleTuner
 - **CUDA 8.0**: правильная архитектура (не 9.0 как у H100)
 - **Медленнее H100**: но все равно очень быстро
 - **40GB/80GB варианты**: конфиги подходят для обеих
+- **Автоустановка**: скрипт настройки всё делает сам
 
 ## 📖 Подробная документация
 
-Полная инструкция: [README_TRAINING.md](README_TRAINING.md)
+- **Установка**: [INSTALL_A100.md](INSTALL_A100.md)
+- **Тренировка**: [README_TRAINING.md](README_TRAINING.md)
+- **Примеры**: [dataset_example.txt](dataset_example.txt)
 
 ---
 
