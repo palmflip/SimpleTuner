@@ -27,7 +27,7 @@ nvcc --version
 ### 2. Установка Python и pip
 
 ```bash
-# Если Python не установлен
+# Устанавливаем Python 3.10 с ОБЯЗАТЕЛЬНЫМ пакетом venv
 sudo apt install -y python3.10 python3.10-venv python3.10-dev python3-pip
 
 # Создаем алиас для удобства
@@ -35,6 +35,8 @@ echo "alias python=python3.10" >> ~/.bashrc
 echo "alias pip=pip3" >> ~/.bashrc
 source ~/.bashrc
 ```
+
+**⚠️ ВАЖНО**: Пакет `python3.10-venv` обязателен! Без него создание виртуального окружения не работает.
 
 ### 3. Клонирование репозитория
 
@@ -46,6 +48,9 @@ cd SimpleTuner
 ### 4. Создание виртуального окружения
 
 ```bash
+# Проверяем что venv доступен
+python3.10 -m venv --help
+
 # Создаем venv
 python3.10 -m venv venv
 
@@ -56,10 +61,19 @@ source venv/bin/activate
 pip install --upgrade pip setuptools wheel
 ```
 
+**🚨 Если ошибка "ensurepip is not available":**
+```bash
+# Переустановите python3.10-venv
+sudo apt install --reinstall python3.10-venv python3.10-dev
+# Удалите старое окружение и создайте заново
+rm -rf venv
+python3.10 -m venv venv
+```
+
 ### 5. Установка PyTorch с CUDA поддержкой
 
 ```bash
-# Для CUDA 11.8
+# Для CUDA 11.8 (рекомендуется для A100)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 # Для CUDA 12.1
@@ -195,49 +209,25 @@ source venv/bin/activate
 
 ## 📦 Автоматическая установка
 
-Создайте скрипт для автоматической установки:
+Используйте готовый скрипт для автоматической установки:
 
 ```bash
-cat > setup_a100.sh << 'EOF'
-#!/bin/bash
-set -e
-
-echo "🚀 Автоматическая настройка SimpleTuner для A100..."
-
-# Проверяем CUDA
-if ! nvidia-smi > /dev/null 2>&1; then
-    echo "❌ NVIDIA GPU не найдена"
-    exit 1
-fi
-
-# Создаем venv
-python3.10 -m venv venv
-source venv/bin/activate
-
-# Устанавливаем PyTorch
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-
-# Устанавливаем зависимости
-pip install diffusers transformers accelerate safetensors datasets wandb tensorboard optimum-quanto peft lycoris_lora huggingface-hub
-
-# Создаем директории
-mkdir -p dataset cache/{vae,text_embeds} output/{models,models_fast} logs workspace/models/unet/flux
-
-# Делаем скрипты исполняемыми
-chmod +x train_flux_a100.sh train_flux_a100_fast.sh
-
-echo "✅ Установка завершена!"
-echo "📋 Следующие шаги:"
-echo "1. Поместите датасет в папку dataset/"
-echo "2. Скачайте Flux модель в /workspace/models/unet/flux/"
-echo "3. Запустите: ./train_flux_a100.sh"
-
-EOF
-
-chmod +x setup_a100.sh
+# Скрипт установки исправлен и учитывает проблему с python3.10-venv
+./setup_a100.sh
 ```
 
 ## 🚨 Решение проблем
+
+### Ошибка "ensurepip is not available"
+```bash
+# Установите обязательный пакет
+sudo apt install python3.10-venv python3.10-dev
+
+# Удалите старое окружение и создайте заново
+rm -rf venv
+python3.10 -m venv venv
+source venv/bin/activate
+```
 
 ### OutOfMemoryError
 ```bash
@@ -258,6 +248,17 @@ export HF_HOME="/fast/ssd/cache"
 # Переустановите PyTorch
 pip uninstall torch torchvision torchaudio
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+### Полная переустановка окружения
+```bash
+# Если что-то пошло не так, полная переустановка:
+rm -rf venv
+sudo apt install --reinstall python3.10-venv python3.10-dev
+python3.10 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip setuptools wheel
+# ... далее установка пакетов
 ```
 
 ---

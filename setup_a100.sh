@@ -11,15 +11,47 @@ fi
 
 echo "✅ GPU найдена: $(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -1)"
 
-# Проверяем Python
+# Обновляем систему и устанавливаем базовые пакеты
+echo "📦 Обновляем систему и устанавливаем необходимые пакеты..."
+sudo apt update
+sudo apt install -y git wget curl build-essential
+
+# Проверяем и устанавливаем Python 3.10 с venv
 if ! command -v python3.10 &> /dev/null; then
     echo "📦 Устанавливаем Python 3.10..."
-    sudo apt update
     sudo apt install -y python3.10 python3.10-venv python3.10-dev python3-pip
+else
+    echo "🐍 Python 3.10 найден, проверяем python3.10-venv..."
+    # Устанавливаем venv если его нет
+    sudo apt install -y python3.10-venv python3.10-dev python3-pip
+fi
+
+# Проверяем что venv работает
+echo "🧪 Проверяем возможность создания виртуального окружения..."
+if ! python3.10 -m venv --help > /dev/null 2>&1; then
+    echo "❌ python3.10-venv не работает. Переустанавливаем..."
+    sudo apt install --reinstall -y python3.10-venv python3.10-dev
 fi
 
 echo "🐍 Создаем виртуальное окружение..."
+# Удаляем старое окружение если есть
+if [ -d "venv" ]; then
+    echo "🗑️  Удаляем старое виртуальное окружение..."
+    rm -rf venv
+fi
+
+# Создаем новое окружение
 python3.10 -m venv venv
+
+# Проверяем что окружение создалось успешно
+if [ ! -f "venv/bin/activate" ]; then
+    echo "❌ Не удалось создать виртуальное окружение."
+    echo "🔧 Попробуйте вручную:"
+    echo "   sudo apt install python3.10-venv python3.10-dev"
+    echo "   python3.10 -m venv venv"
+    exit 1
+fi
+
 source venv/bin/activate
 
 echo "⬆️  Обновляем pip..."
