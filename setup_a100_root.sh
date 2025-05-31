@@ -30,8 +30,8 @@ pip install compel scipy boto3 pandas torchmetrics
 pip install sentencepiece tokenizers huggingface-hub
 pip install numpy colorama atomicwrites beautifulsoup4
 
-# Попытка установить xformers (может не сработать на всех системах)
-pip install xformers || echo "⚠️ xformers не установлен, продолжаем без него"
+# xformers для CUDA 11.8 (или пропускаем если не работает)
+pip install xformers --index-url https://download.pytorch.org/whl/cu118 || echo "⚠️ xformers не установлен, продолжаем без него"
 
 # Создаем папки
 mkdir -p dataset output/models output/models_fast logs workspace/models/unet/flux
